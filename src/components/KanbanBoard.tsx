@@ -2,8 +2,9 @@ import { useState, useMemo } from 'react';
 import PlusIcon from '../icons/PlusIcon';
 import { Column, Id } from '../types';
 import ColumnContainer from './ColumnContainer';
-import { DndContext, DragStartEvent } from '@dnd-kit/core';
+import { DndContext, DragOverlay, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
+import { createPortal } from 'react-dom';
 
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -36,6 +37,18 @@ function KanbanBoard() {
             Add Column
           </button>
         </div>
+
+        {createPortal(
+          <DragOverlay>
+            {activeColumn && (
+              <ColumnContainer
+                column={activeColumn}
+                deleteColumn={deleteColumn}
+              />
+            )}
+          </DragOverlay>,
+          document.body
+        )}
       </DndContext>
     </div>
   );
